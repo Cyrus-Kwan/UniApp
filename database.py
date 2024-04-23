@@ -78,10 +78,9 @@ class Database():
             save_content = "\n".join(lines)
             file_handle.writelines(save_content)
 
-    def read_data(self, line_index=None):
+    def read_data(self):
         '''
         By default, reads all the lines in the file
-        If a line index is supplied, the function returns a specific line at the given index
         '''
         data = {}
         with open(self.path, mode="r") as file_handle:
@@ -129,7 +128,7 @@ def main():
     DATAFILE = "student.data"
     new_db = Database(DATAFILE)
     print(new_db.data)
-    new_db.write_data(f"{len(new_db.data["ID"])+1},Harry,172")
+    new_db.write_data(f"{len(new_db.data["ID"])+1},Henryy,183")
     new_db.update_file()
 
 if __name__ == "__main__":

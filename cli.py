@@ -1,3 +1,5 @@
+import regex as re
+
 colour = {
     "black":"\033[0;30m",
     "red":"\033[0;31m",
@@ -20,3 +22,30 @@ def notify(text):
     Prints green text to the terminal
     '''
     print(colour["green"]+f"SUCCESS: {text}"+colour["white"])
+
+def menu(class_obj):
+    '''
+    Returns a function object that can later be called
+    '''
+    pass
+
+def getMethods(class_obj):
+    methods = []
+
+    # Lambda function that check whether or not a method is callable
+    is_method = lambda obj, func: callable(getattr(obj, func))
+    # Lambda function that checks if a method is not double underscored
+    is_pure = lambda func: re.fullmatch(r"^[^_].+[^_]$", func)
+
+    for func in dir(class_obj):
+        if is_method(class_obj, func) and is_pure(func):
+            methods.append(func)
+
+    # Methods are returned as strings
+    return methods
+
+def main():
+    pass
+
+if __name__ == "__main__":
+    main()
