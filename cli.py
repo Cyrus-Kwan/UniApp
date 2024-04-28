@@ -25,9 +25,14 @@ def notify(text):
 
 def menu(class_obj):
     '''
-    Returns a function object that can later be called
+    Calls a function based on the user's selection from available methods in the class object
     '''
-    pass
+    selection = input(getMethods(class_obj))
+    func = {}
+    for method in getMethods(class_obj):
+        func[method] = getattr(class_obj, method)
+
+    func[selection]()
 
 def getMethods(class_obj):
     methods = []
