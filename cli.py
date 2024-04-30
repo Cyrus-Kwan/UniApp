@@ -23,26 +23,69 @@ def notify(text):
     '''
     print(colour["green"]+f"SUCCESS: {text}"+colour["white"])
 
-def menu(class_obj):
+def message(text, code):
+    print(colour[code]+f"{text}"+colour["white"])
+
+def menu(class_obj, title=None):
     '''
     Calls a function based on the user's selection from available methods in the class object
     '''
-    selection = input(getMethods(class_obj))
     func = {}
-    for method in getMethods(class_obj):
-        func[method] = getattr(class_obj, method)
+    keys = getKeys(class_obj)
 
-    func[selection]()
+    for method in getMethods(class_obj):
+        func[keys[method]] = getattr(class_obj, method)
+
+    selection = None
+    while selection not in func.keys():
+        if title:
+            selection = input(colour["cyan"]+f"{title}"+colour["white"])
+        else:
+            selection = input(colour["cyan"]+f"{getTitle(class_obj)}"+colour["white"])
+        
+        try:
+            func[selection]()
+            break
+        except KeyError:
+            error(f"'{selection}' is not a valid function.")
+
+def getKeys(class_obj):
+    '''
+    Maps method names from a given class object to unique characters
+    '''
+    method_keys = {}
+
+    # Iterates through each method String
+    for method in getMethods(class_obj):
+        # Iterates through each character in the method string
+        for char in method:
+            # Ensures only unique values are assigned to each method
+            if char in method_keys.values():
+                continue
+            else:
+                method_keys[method] = char
+                break
+
+    return method_keys
+
 
 def getTitle(class_obj):
+    '''
+    Returns a string for a generic formatted title based on the given class parameter
+    '''
     raw_name = re.search(r"(?<=\.)\w+(?=\s)", class_obj.__str__())[0] or None
     class_name = re.sub(r'((?<=\S)[A-Z](?=[a-z]))', r" \1", raw_name)
-    method_keys = (key[0] for key in getMethods(class_obj))
-    options = "("+"/".join(method_keys)+")"
 
-    return " ".join((class_name, "System:", options))
+    keys = getKeys(class_obj)
+
+    options = "("+"/".join(keys.values())+")"
+
+    return " ".join((class_name, "System:", options)) + ": "
 
 def getMethods(class_obj):
+    '''
+    Returns a list of all public class methods in the given class object
+    '''
     methods = []
 
     # Lambda function that check whether or not a method is callable
@@ -59,7 +102,7 @@ def getMethods(class_obj):
 
 def main():
     test = SomeElaborateClass()
-    print(getTitle(test))
+    menu(SomeElaborateClass())
 
 class SomeElaborateClass():
     def apple(self):
@@ -70,6 +113,15 @@ class SomeElaborateClass():
 
     def coconut(self):
         print("coconut")
+
+    def anchovies(self):
+        print(">:]")
+
+    def astronaut(self):
+        print("i'm in space!")
+
+    def ape(self):
+        print("I like bananas")
 
 if __name__ == "__main__":
     main()
