@@ -1,4 +1,6 @@
 from database import Database
+from student_course import StudentCourse
+import cli
 
 class Student():
     '''
@@ -15,29 +17,51 @@ class Student():
 
     Login:
         Students should be able to login. Then the student should be checked if they exist. Only a 
-        registered student should login. Upon login, students’ data should be read from
+        registered student should login. Upon login, students data should be read from
         “students.data”. After login, a student goes to Student Course Menu that offers the choices:
     '''
 
-    def __init__(self, name, email, password, subjects):
-        self.student_id = self.generate_id()
-        self.name = name
-        self.email = email
-        self.password = password
-        self.subjects = subjects
+    def __init__(self, data):
+        self.data = data
+        cli.menu(self)
 
     def login(self):
-        pass
+        '''
+        Should check a database object to see if their given email and password exist in
+        the system
+        '''
+        email = input("Email: ")
+        password = input("Password: ")
+
+        # Line index to reference every other credential in the database object
+        idx = None
+
+        if email in self.data["email"] and password in self.data["password"]:
+            idx = self.data["email"].index(email)
 
     def register(self):
+        '''
+        Should check a database object to see if their given email and password exists in the system
+        If it does, notify the user that they can already log in
+        If it doesn't, check if the inputed email and password are valid
+        If all input is valid, create a new student with no subjects in the database object
+        '''
         pass
 
     def generate_id(self):
+        '''
+        Check the database object for all IDs
+        Create a random 6 digit ID that is NOT already listed in the existing IDs
+        IDs that are less than 6 digits should be padded with 0's from the left
+        '''
         pass
 
 def main():
-    test = Student("Harry", "email", "password", ["123"])
-    print(test.__doc__)
+    DATAFILE = "student.data"
+    database = Database(filepath=DATAFILE)
+    print("123" in database.data["password"])
+
+    Student(database.data)
 
 if __name__ == "__main__":
     main()
