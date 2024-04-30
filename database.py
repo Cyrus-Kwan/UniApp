@@ -116,8 +116,8 @@ class Database():
         If only directory name is received, create "student.data" in given directory
         Function returns a full path
         '''
-        re_dir, = re.findall(r"^.*/$", filepath) or [None]
-        re_file, = re.findall(r"^[^/]+$", filepath) or [None]
+        re_dir, = re.findall(r"^.*[/\\]$", filepath) or [None]
+        re_file, = re.findall(r"^[^/\\]+$", filepath) or [None]
         re_path, = re.findall(r"^.*$", filepath) or [None]
 
         if re_dir: return "\\".join((re_dir, self.default_name))
@@ -125,11 +125,11 @@ class Database():
         else: return re_path
 
 def main():
-    DATAFILE = "student.data"
+    DATAFILE = "students.data"
     new_db = Database(DATAFILE)
     print(new_db.data)
-    new_db.write_data(f"{len(new_db.data["ID"])+1},Henryy,183")
-    new_db.update_file()
+    #new_db.write_data(f"{len(new_db.data["ID"])+1},Henry,183")
+    #new_db.update_file()
 
 if __name__ == "__main__":
     main()

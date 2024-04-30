@@ -34,6 +34,14 @@ def menu(class_obj):
 
     func[selection]()
 
+def getTitle(class_obj):
+    raw_name = re.search(r"(?<=\.)\w+(?=\s)", class_obj.__str__())[0] or None
+    class_name = re.sub(r'((?<=\S)[A-Z](?=[a-z]))', r" \1", raw_name)
+    method_keys = (key[0] for key in getMethods(class_obj))
+    options = "("+"/".join(method_keys)+")"
+
+    return " ".join((class_name, "System:", options))
+
 def getMethods(class_obj):
     methods = []
 
@@ -50,7 +58,18 @@ def getMethods(class_obj):
     return methods
 
 def main():
-    pass
+    test = SomeElaborateClass()
+    print(getTitle(test))
+
+class SomeElaborateClass():
+    def apple(self):
+        print("apple")
+
+    def banana(self):
+        print("banana")
+
+    def coconut(self):
+        print("coconut")
 
 if __name__ == "__main__":
     main()
