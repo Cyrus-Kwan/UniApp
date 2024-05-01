@@ -5,12 +5,18 @@ class Subject():
         if subject_id and mark:
             self.subject_id = subject_id
             self.mark = mark
+            print("No marks or id")
         else:
             self.subject_id = self.new_id()
             self.mark = self.new_mark()
+            print("marks and id", f"{self.mark}", f"{self.subject_id}")
         self.grade = self.get_grade(self.mark)
 
     def new_id(self):
+        ID =random.randint(1,999)
+        line = str(ID).rjust(3, '0')
+        print ("Your student ID is", line)
+        
         '''
         ID randomly generated 1 <= ID <= 999, unique and formatted as 3-digits width
         IDs less than 3-digits width should be completed with zeroes from the left.
@@ -22,9 +28,12 @@ class Subject():
         # Example: subject_id = "023"
         #               return subject_id
         # NOTE: value types can be checked with print(type(value))
-        return 0
+        return line
 
     def new_mark(self):
+        new_mark= random.randint(25,100)
+        
+        print ("Your mark is",new_mark)
         '''
         mark is randomly generated where 25<= mark <= 100
         '''
@@ -33,9 +42,21 @@ class Subject():
         # Example: mark = 75
         #               return mark
         # NOTE: value types can be checked with print(type(value))
-        return 0
+        return new_mark
 
     def get_grade(self, mark):
+        
+        if mark < 50: 
+            return "F"
+        if mark >= 50 and mark < 65: 
+            return "P"
+        if mark >= 65 and mark < 75: 
+            return "C"
+        if mark >= 75 and mark < 85: 
+            return "D"
+        if mark >= 85:
+            return "HD"
+        
         '''
         grade is determined based on the mark
         '''
@@ -46,7 +67,7 @@ class Subject():
         # If mark >= 65 and mark < 75, grade = "C"
         # If mark >= 75 and mark < 85, grade = "D"
         # If mark >= 85, grade = "HD"
-        return 0
+        
 
 def main():
     # You can test your code here
