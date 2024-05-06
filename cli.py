@@ -32,19 +32,30 @@ def menu(class_obj, title=None):
     '''
     func = {}
     keys = getKeys(class_obj)
+    defaults = {exit:"x", help:"h"}
 
+    # Populates func map with class methods
     for method in getMethods(class_obj):
         func[keys[method]] = getattr(class_obj, method)
+
+    # Populates func map with default methods
+    for method in defaults:
+        func[defaults[method]] = method
 
     selection = None
     while selection not in func.keys():
         if title:
             selection = input(colour["cyan"]+f"{title}"+colour["white"])
         else:
-            selection = input(colour["cyan"]+f"{getTitle(class_obj)}"+colour["white"])
+            selection = input(colour["cyan"]+f"{getTitle(class_obj)}"+f"{getOptions(func)}"+": "+colour["white"])
         
         try:
-            func[selection]()
+            if func[selection] in defaults:
+                # Calls one of the default methods
+                func[selection](class_obj)
+            else:
+                # Calls the class method
+                func[selection]()
             break
         except KeyError:
             error(f"'{selection}' is not a valid function.")
@@ -68,7 +79,6 @@ def getKeys(class_obj):
 
     return method_keys
 
-
 def getTitle(class_obj):
     '''
     Returns a string for a generic formatted title based on the given class parameter
@@ -76,11 +86,14 @@ def getTitle(class_obj):
     raw_name = re.search(r"(?<=\.)\w+(?=\s)", class_obj.__str__())[0] or None
     class_name = re.sub(r'((?<=\S)[A-Z](?=[a-z]))', r" \1", raw_name)
 
-    keys = getKeys(class_obj)
+    return " ".join((class_name, "System: "))
 
-    options = "("+"/".join(keys.values())+")"
-
-    return " ".join((class_name, "System:", options)) + ": "
+def getOptions(keys):
+    '''
+    Returns a string of menu options based on given dictionary keys.
+    '''
+    options = "("+"/".join(keys)+")"
+    return options
 
 def getMethods(class_obj):
     '''
@@ -100,11 +113,24 @@ def getMethods(class_obj):
     # Methods are returned as strings
     return methods
 
+def exit(class_obj):
+    '''
+    Exits the current class menu.
+    Default method that is present in all menus
+    '''
+    del class_obj
+
+def help(class_obj):
+    print(class_obj.__doc__)
+
 def main():
     test = SomeElaborateClass()
     menu(SomeElaborateClass())
 
 class SomeElaborateClass():
+    '''
+    Sample docstring
+    '''
     def apple(self):
         print("apple")
 
