@@ -48,7 +48,7 @@ class Student():
         '''
         pass
 
-    def generate_id(self):
+    def _generate_id(self):
         '''
         Check the database object for all IDs
         Create a random 6 digit ID that is NOT already listed in the existing IDs
@@ -59,7 +59,6 @@ class Student():
 def main():
     DATAFILE = "student.data"
     database = Database(filepath=DATAFILE)
-    print("123" in database.data["password"])
 
     Student(database.data)
 
