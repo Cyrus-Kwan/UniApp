@@ -35,7 +35,7 @@ def menu(class_obj, title=None):
     defaults = {exit:"x", help:"h"}
 
     # Populates func map with class methods
-    for method in getMethods(class_obj):
+    for method in get_methods(class_obj):
         func[keys[method]] = getattr(class_obj, method)
 
     # Populates func map with default methods
@@ -47,7 +47,7 @@ def menu(class_obj, title=None):
         if title:
             selection = input(colour["cyan"]+f"{title}"+colour["white"])
         else:
-            selection = input(colour["cyan"]+f"{getTitle(class_obj)}"+f"{getOptions(func)}"+": "+colour["white"])
+            selection = input(colour["cyan"]+f"{getTitle(class_obj)}"+f"{get_options(func)}"+": "+colour["white"])
         
         try:
             if func[selection] in defaults:
@@ -67,7 +67,7 @@ def getKeys(class_obj):
     method_keys = {}
 
     # Iterates through each method String
-    for method in getMethods(class_obj):
+    for method in get_methods(class_obj):
         # Iterates through each character in the method string
         for char in method:
             # Ensures only unique values are assigned to each method
@@ -88,14 +88,14 @@ def getTitle(class_obj):
 
     return " ".join((class_name, "System: "))
 
-def getOptions(keys):
+def get_options(keys):
     '''
     Returns a string of menu options based on given dictionary keys.
     '''
     options = "("+"/".join(keys)+")"
     return options
 
-def getMethods(class_obj):
+def get_methods(class_obj):
     '''
     Returns a list of all public class methods in the given class object
     '''
