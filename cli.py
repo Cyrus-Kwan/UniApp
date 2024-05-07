@@ -32,7 +32,7 @@ def menu(class_obj, title=None):
     '''
     func = {}
     keys = getKeys(class_obj)
-    defaults = {exit:"x", help:"h"}
+    defaults = {exit_menu:"x", help:"h"}
 
     # Populates func map with class methods
     for method in get_methods(class_obj):
@@ -42,21 +42,24 @@ def menu(class_obj, title=None):
     for method in defaults:
         func[defaults[method]] = method
 
+    # Sets a default user selection
     selection = None
-    while selection not in func.keys():
+
+    # Menu runs until the user exits the program
+    while selection != "x":
         if title:
             selection = input(colour["cyan"]+f"{title}"+colour["white"])
         else:
-            selection = input(colour["cyan"]+f"{getTitle(class_obj)}"+f"{get_options(func)}"+": "+colour["white"])
-        
+            selection = input(colour["cyan"]+f"{get_title(class_obj)}"+f"{get_options(func)}"+": "+colour["white"])
+
         try:
-            if func[selection] in defaults:
+            args = selection.split(" ")
+            if func[args[-1]] in defaults:
                 # Calls one of the default methods
-                func[selection](class_obj)
+                func[args[-1]](class_obj, func, selection)
             else:
                 # Calls the class method
                 func[selection]()
-            break
         except KeyError:
             error(f"'{selection}' is not a valid function.")
 
@@ -74,12 +77,12 @@ def getKeys(class_obj):
             if char in method_keys.values():
                 continue
             else:
-                method_keys[method] = char
+                method_keys[method] = char.lower()
                 break
 
     return method_keys
 
-def getTitle(class_obj):
+def get_title(class_obj):
     '''
     Returns a string for a generic formatted title based on the given class parameter
     '''
@@ -113,21 +116,32 @@ def get_methods(class_obj):
     # Methods are returned as strings
     return methods
 
-def exit(class_obj):
+def exit_menu(*args):
     '''
     Exits the current class menu.
-    Default method that is present in all menus
+    Default method that is present in all menus.
     '''
-    del class_obj
+    pass
 
-def help(class_obj):
-    print(class_obj.__doc__)
+def help(class_obj, func=None, selection=None):
+    '''
+    Prints the docstring of the parsed-in selection to the terminal.
+    If the user selection was "h", prints the docstring of the class object.
+    If the user selection is a class method followed by "h", EXAMPLE: "a h" prints the docstring of class method "a".
+    '''
+    args = selection.split(" ")
+    if len(args) > 2:
+        raise KeyError
+    elif len(args) == 2:
+        print(func[args[0]].__doc__)
+    else:
+        print(class_obj.__doc__)
 
 def main():
     test = SomeElaborateClass()
-    menu(SomeElaborateClass())
+    menu(test)
 
-class SomeElaborateClass():
+class SomeElaborateClass(object):
     '''
     Sample docstring
     '''
