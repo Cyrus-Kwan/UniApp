@@ -127,8 +127,7 @@ class Database():
 def main():
     DATAFILE = "students.data"
     new_db = Database(DATAFILE)
-    print(new_db.data)
-    #new_db.write_data(f"{len(new_db.data["ID"])+1},Henry,183")
+    # new_db.write_data(f"")
     #new_db.update_file()
 
 if __name__ == "__main__":
