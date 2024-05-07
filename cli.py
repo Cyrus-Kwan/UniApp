@@ -11,43 +11,89 @@ colour = {
     "white":"\033[0;37m",
 }
 
+# TERMINAL OUTPUT PROCEDURES:
 def error(text):
     '''
-    Prints error message in red text to the terminal
+    Prints error message in red text to the terminal.
     '''
     print(colour["red"]+f"ERROR: {text}"+colour["white"])
 
 def notify(text):
     '''
-    Prints green text to the terminal
+    Prints green text to the terminal.
     '''
     print(colour["green"]+f"SUCCESS: {text}"+colour["white"])
 
 def message(text, code):
+    '''
+    Generic print to terminal of specified colour.
+    '''
     print(colour[code]+f"{text}"+colour["white"])
 
+# DEFAULT MENU OPTIONS:
+def exit_menu(class_obj, *args):
+    '''
+    Exits the current class menu.
+    Default method that is present in all menus.
+    When this method is called, it should return the state of the class object.
+    '''
+    return vars(class_obj)
+
+def help(class_obj, func=None, selection=None):
+    '''
+    Prints the docstring of the parsed-in selection to the terminal.
+    If the user selection was "h", prints the docstring of the class object.
+    If the user selection is a class method followed by "h", EXAMPLE: "a h" prints the docstring of class method "a".
+    '''
+    args = selection.split(" ")
+    if len(args) > 2:
+        raise KeyError
+    elif len(args) == 2:
+        message(func[args[0]].__doc__, "yellow")
+    else:
+        message(class_obj.__doc__, "yellow")
+
+# MENU FUNCTIONALITY:
 def menu(class_obj, title=None):
     '''
     Calls a function based on the user's selection from available methods in the class object
     '''
     func = {}
     keys = getKeys(class_obj)
+    defaults = {exit_menu:"x", help:"h"}
 
-    for method in getMethods(class_obj):
+    # Populates func map with class methods
+    for method in get_methods(class_obj):
         func[keys[method]] = getattr(class_obj, method)
 
+    # Populates func map with default methods
+    for method in defaults:
+        func[defaults[method]] = method
+
+    # Sets a default user selection
     selection = None
-    while selection not in func.keys():
+
+    # Menu runs until the user exits the program
+    while selection != "x":
         if title:
             selection = input(colour["cyan"]+f"{title}"+colour["white"])
         else:
-            selection = input(colour["cyan"]+f"{getTitle(class_obj)}"+colour["white"])
-        
+            selection = input(colour["cyan"]+f"{get_title(class_obj)}"+f"{get_options(func)}"+": "+colour["white"])
+
         try:
-            func[selection]()
-            break
+            args = selection.split(" ")
+            if func[args[-1]] in defaults:
+                # Calls one of the default methods
+                func[args[-1]](class_obj, func, selection)
+            else:
+                # Calls the class method
+                func[selection]()
         except KeyError:
             error(f"'{selection}' is not a valid function.")
+    
+    # Whenever a menu closes, return the class variables.
+    return exit_menu(class_obj)
+    
 
 def getKeys(class_obj):
     '''
@@ -56,33 +102,35 @@ def getKeys(class_obj):
     method_keys = {}
 
     # Iterates through each method String
-    for method in getMethods(class_obj):
+    for method in get_methods(class_obj):
         # Iterates through each character in the method string
         for char in method:
             # Ensures only unique values are assigned to each method
             if char in method_keys.values():
                 continue
             else:
-                method_keys[method] = char
+                method_keys[method] = char.lower()
                 break
 
     return method_keys
 
-
-def getTitle(class_obj):
+def get_title(class_obj):
     '''
     Returns a string for a generic formatted title based on the given class parameter
     '''
     raw_name = re.search(r"(?<=\.)\w+(?=\s)", class_obj.__str__())[0] or None
     class_name = re.sub(r'((?<=\S)[A-Z](?=[a-z]))', r" \1", raw_name)
 
-    keys = getKeys(class_obj)
+    return " ".join((class_name, "System: "))
 
-    options = "("+"/".join(keys.values())+")"
+def get_options(keys):
+    '''
+    Returns a string of menu options based on given dictionary keys.
+    '''
+    options = "("+"/".join(keys)+")"
+    return options
 
-    return " ".join((class_name, "System:", options)) + ": "
-
-def getMethods(class_obj):
+def get_methods(class_obj):
     '''
     Returns a list of all public class methods in the given class object
     '''
@@ -102,9 +150,16 @@ def getMethods(class_obj):
 
 def main():
     test = SomeElaborateClass()
-    menu(SomeElaborateClass())
+    menu(test)
 
-class SomeElaborateClass():
+class SomeElaborateClass(object):
+    '''
+    Sample docstring
+    '''
+    def __init__(self):
+        self.var = 0
+        self.val = "hello"
+
     def apple(self):
         print("apple")
 

@@ -21,8 +21,8 @@ class Student():
         “students.data”. After login, a student goes to Student Course Menu that offers the choices:
     '''
 
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, database):
+        self.database = database
         cli.menu(self)
 
     def login(self):
@@ -36,8 +36,37 @@ class Student():
         # Line index to reference every other credential in the database object
         idx = None
 
-        if email in self.data["email"] and password in self.data["password"]:
-            idx = self.data["email"].index(email)
+        if email in self.database.data["email"] and password in self.database.data["password"]:
+            idx = self.database.data["email"].index(email)
+
+            # Instantiate new student course
+            id = self.database.data["id"][idx]
+            name = self.database.data["name"][idx]
+            email = self.database.data["email"][idx]
+            password = self.database.data["password"][idx]
+            subjects = self.database.data["subjects"][idx]
+            marks = self.database.data["marks"][idx]
+
+            student_session = StudentCourse(
+                id, 
+                name, 
+                email, 
+                password, 
+                subjects, 
+                marks,
+                )
+            
+            # Menu to perform operations on specific student
+            session_state = cli.menu(student_session)
+
+            # Updates data from specific student into the data in memory
+            for key in session_state.keys():
+                self.database.data[key][idx] = session_state[key]
+
+            # Writes data in memory to file
+            self.database.update_file()
+        else:
+            cli.error("Incorrect email or password.")
 
     def register(self):
         '''
@@ -48,7 +77,7 @@ class Student():
         '''
         pass
 
-    def generate_id(self):
+    def _generate_id(self):
         '''
         Check the database object for all IDs
         Create a random 6 digit ID that is NOT already listed in the existing IDs
@@ -59,9 +88,8 @@ class Student():
 def main():
     DATAFILE = "student.data"
     database = Database(filepath=DATAFILE)
-    print("123" in database.data["password"])
 
-    Student(database.data)
+    Student(database)
 
 if __name__ == "__main__":
     main()
