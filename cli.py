@@ -11,21 +11,48 @@ colour = {
     "white":"\033[0;37m",
 }
 
+# TERMINAL OUTPUT PROCEDURES:
 def error(text):
     '''
-    Prints error message in red text to the terminal
+    Prints error message in red text to the terminal.
     '''
     print(colour["red"]+f"ERROR: {text}"+colour["white"])
 
 def notify(text):
     '''
-    Prints green text to the terminal
+    Prints green text to the terminal.
     '''
     print(colour["green"]+f"SUCCESS: {text}"+colour["white"])
 
 def message(text, code):
+    '''
+    Generic print to terminal of specified colour.
+    '''
     print(colour[code]+f"{text}"+colour["white"])
 
+# DEFAULT MENU OPTIONS:
+def exit_menu(*args):
+    '''
+    Exits the current class menu.
+    Default method that is present in all menus.
+    '''
+    pass
+
+def help(class_obj, func=None, selection=None):
+    '''
+    Prints the docstring of the parsed-in selection to the terminal.
+    If the user selection was "h", prints the docstring of the class object.
+    If the user selection is a class method followed by "h", EXAMPLE: "a h" prints the docstring of class method "a".
+    '''
+    args = selection.split(" ")
+    if len(args) > 2:
+        raise KeyError
+    elif len(args) == 2:
+        message(func[args[0]].__doc__, "yellow")
+    else:
+        message(class_obj.__doc__, "yellow")
+
+# MENU FUNCTIONALITY:
 def menu(class_obj, title=None):
     '''
     Calls a function based on the user's selection from available methods in the class object
@@ -115,27 +142,6 @@ def get_methods(class_obj):
 
     # Methods are returned as strings
     return methods
-
-def exit_menu(*args):
-    '''
-    Exits the current class menu.
-    Default method that is present in all menus.
-    '''
-    pass
-
-def help(class_obj, func=None, selection=None):
-    '''
-    Prints the docstring of the parsed-in selection to the terminal.
-    If the user selection was "h", prints the docstring of the class object.
-    If the user selection is a class method followed by "h", EXAMPLE: "a h" prints the docstring of class method "a".
-    '''
-    args = selection.split(" ")
-    if len(args) > 2:
-        raise KeyError
-    elif len(args) == 2:
-        message(func[args[0]].__doc__, "yellow")
-    else:
-        message(class_obj.__doc__, "yellow")
 
 def main():
     test = SomeElaborateClass()
