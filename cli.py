@@ -133,9 +133,9 @@ def help(class_obj, func=None, selection=None):
     if len(args) > 2:
         raise KeyError
     elif len(args) == 2:
-        print(func[args[0]].__doc__)
+        message(func[args[0]].__doc__, "yellow")
     else:
-        print(class_obj.__doc__)
+        message(class_obj.__doc__, "yellow")
 
 def main():
     test = SomeElaborateClass()
