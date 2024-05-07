@@ -1,3 +1,6 @@
+import random
+import cli
+
 class StudentCourse():
     '''
     Logged in students can access this menu to perform the following actions:
@@ -10,25 +13,41 @@ class StudentCourse():
     '''
 
     def __init__(self, id, name, email, password, subjects, marks):
-        self.id = None
-        self.name = None
-        self.email = None
-        self.password = None
-        self.subjects = []
-        self.marks = []
+        self.id = id
+        self.name = name
+        self.email = email
+        self.password = password
+        self.subjects = subjects
+        self.marks = marks
 
     def change(self):
         '''
         Changes the current student's password.
         '''
-        pass
+        new_password = input("Type new password:")
+        self.password = new_password
 
     def enrol(self):
         '''
         Adds a random subject to your current list of subjects.
         You can have a maximum of up to four subjects.
         '''
-        pass
+        # subjects variable is stored as a string in the format "<subject 1>-<subject 2>-<subject 3>"
+        # Each subject should be 3 digits long between 1 and 999
+        # A subject should not be duplicated in the student course list
+        subject_arr = self.subjects.split()
+        if len(subject_arr) >= 4:
+            cli.message("Students are allowed to enrol in 4 subjects only", "red")
+        else:
+            new_subject = random.randint(1, 999)
+
+            while new_subject in subject_arr:
+                new_subject = random.randint(1, 999)
+
+            subject_arr.append(str(new_subject).ljust(3, "0"))
+            self.subjects = " ".join(subject_arr)
+            cli.message(f"Enrolling in Subject-{new_subject}", "yellow")
+            cli.message(f"You are now enrolled in {len(subject_arr)} out of 4 subjects", "yellow")
 
     def remove(self):
         '''

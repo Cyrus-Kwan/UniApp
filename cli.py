@@ -31,12 +31,13 @@ def message(text, code):
     print(colour[code]+f"{text}"+colour["white"])
 
 # DEFAULT MENU OPTIONS:
-def exit_menu(*args):
+def exit_menu(class_obj, *args):
     '''
     Exits the current class menu.
     Default method that is present in all menus.
+    When this method is called, it should return the state of the class object.
     '''
-    pass
+    return vars(class_obj)
 
 def help(class_obj, func=None, selection=None):
     '''
@@ -89,6 +90,10 @@ def menu(class_obj, title=None):
                 func[selection]()
         except KeyError:
             error(f"'{selection}' is not a valid function.")
+    
+    # Whenever a menu closes, return the class variables.
+    return exit_menu(class_obj)
+    
 
 def getKeys(class_obj):
     '''
@@ -151,6 +156,10 @@ class SomeElaborateClass(object):
     '''
     Sample docstring
     '''
+    def __init__(self):
+        self.var = 0
+        self.val = "hello"
+
     def apple(self):
         print("apple")
 
