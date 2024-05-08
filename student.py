@@ -1,5 +1,6 @@
 from database import Database
 from student_course import StudentCourse
+from subject import Subject
 import cli
 
 class Student():
@@ -40,28 +41,27 @@ class Student():
             idx = self.database.data["email"].index(email)
 
             # Instantiate new student course
-            id = self.database.data["id"][idx]
-            name = self.database.data["name"][idx]
-            email = self.database.data["email"][idx]
-            password = self.database.data["password"][idx]
-            subjects = self.database.data["subjects"][idx]
-            marks = self.database.data["marks"][idx]
+            student = {key:self.database.data[key][idx] for key in self.database.data.keys()}
 
             student_session = StudentCourse(
-                id, 
-                name, 
-                email, 
-                password, 
-                subjects, 
-                marks,
-                )
+                student["student_id"],
+                student["name"],
+                student["email"],
+                student["password"],
+                student["subjects"],
+                student["marks"],
+            )
             
             # Menu to perform operations on specific student
             session_state = cli.menu(student_session)
 
             # Updates data from specific student into the data in memory
-            for key in session_state.keys():
-                self.database.data[key][idx] = session_state[key]
+            self.database.data["student_id"][idx] = session_state["student_id"]
+            self.database.data["name"][idx] = session_state["name"]
+            self.database.data["email"][idx] = session_state["email"]
+            self.database.data["password"][idx] = session_state["password"]
+            self.database.data["subjects"][idx] = " ".join((str(subject.subject_id) for subject in session_state["subjects"]))
+            self.database.data["marks"][idx] = " ".join((str(subject.mark) for subject in session_state["subjects"]))
 
             # Writes data in memory to file
             self.database.update_file()
