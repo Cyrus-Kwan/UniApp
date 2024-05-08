@@ -1,7 +1,6 @@
-import random
 import cli
-import valid
 
+from utils import Utils
 from subject import Subject
 
 class StudentCourse():
@@ -16,11 +15,11 @@ class StudentCourse():
     '''
 
     def __init__(self, student_id, name, email, password, subject_str, mark_str):
-        self.student_id = student_id
-        self.name = name
-        self.email = email
-        self.password = password
-        self.subjects = self._get_subjects(subject_str, mark_str)
+        self.student_id:str = student_id
+        self.name:str = name
+        self.email:str = email
+        self.password:str = password
+        self.subjects:list[Subject] = self._get_subjects(subject_str, mark_str)
         
     def _get_subjects(self, subject_str, mark_str):
         id_arr = subject_str.split()
@@ -50,9 +49,9 @@ class StudentCourse():
         new_password = ""
         confirm_password = ""
 
-        while valid.password(new_password) == False:
+        while Utils.password(new_password) == False:
             new_password = input("New Password: ")
-            if valid.password(new_password) == False:
+            if Utils.password(new_password) == False:
                 cli.message("Incorrect password format", "red")
 
         while new_password != confirm_password:
@@ -93,11 +92,23 @@ class StudentCourse():
         '''
         Prints the student's currently enrolled subjects to the terminal.
         '''
+        # Have a look above in __init__(), notice that self.subjects is a list of Subjects
+        # Each Subject will have the instance variables: subject_id, mark, and grade.
+        # You will need to use these variables for the following task
+        # Reference: https://docs.python.org/3/tutorial/classes.html#class-and-instance-variables
+
+        # For each Subject in self.subjects, print the subject_id, mark, and grade in the following format
+        # [ Subject::<subject_id> -- mark = <mark> -- grade = <grade>]
+        # Reference: https://docs.python.org/3/tutorial/controlflow.html#for-statements
+        # Reference: https://docs.python.org/3/tutorial/inputoutput.html#fancier-output-formatting
+        # NOTE: In this output <grade> should be padded with spaces " " so that the width of each
+        #       grade is equal to 3 see Charlie's example of new_id() in subject.py
+        # Reference: https://docs.python.org/3/library/stdtypes.html#str.rjust
         pass
 
 def main():
     test = StudentCourse("0001", "test", "email", "123","123 456", "65 76 85")
-    print(valid.password("123"))
+    print(Utils.password("123"))
     cli.menu(test)
     print(test.password)
 
