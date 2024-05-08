@@ -72,7 +72,6 @@ class Database():
 
             # Transposes keys into lines
             lines = [','.join(line) for line in zip(*(self.data[key] for key in self.data))]
-            print(lines)
 
             # Writes the input string to the data file
             save_content = "\n".join(lines)
