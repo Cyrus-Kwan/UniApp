@@ -1,5 +1,6 @@
 import random
 import cli
+import valid
 
 from subject import Subject
 
@@ -40,8 +41,27 @@ class StudentCourse():
     def change(self):
         '''
         Changes the current student's password.
+        Valid passwords must:
+            - Start with upper case
+            - Minimum 6 letters
+            - Followed by minimum 3-digits
         '''
-        pass
+        cli.message("Updating Password", "yellow")
+        new_password = ""
+        confirm_password = ""
+
+        while valid.password(new_password) == False:
+            new_password = input("New Password: ")
+            if valid.password(new_password) == False:
+                cli.message("Incorrect password format", "red")
+
+        while new_password != confirm_password:
+            confirm_password = input("Confirm Password: ")
+            if  new_password != confirm_password:
+                cli.message("Password does not match - try again", "red")
+
+        self.password = new_password
+
 
     def enrol(self):
         '''
@@ -76,8 +96,10 @@ class StudentCourse():
         pass
 
 def main():
-    test = StudentCourse(1, "test", "email", "123 456", "65 76 85")
-    test.enrol()
+    test = StudentCourse("0001", "test", "email", "123","123 456", "65 76 85")
+    print(valid.password("123"))
+    cli.menu(test)
+    print(test.password)
 
 if __name__ == "__main__":
     main()
