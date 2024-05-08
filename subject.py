@@ -12,15 +12,17 @@ class Subject():
         self.mark = -1
 
         if subject_id and mark:
-            self.subject_id = subject_id
-            self.mark = mark
-            self.grade = self.get_grade(self.mark)
+            self.subject_id:str = subject_id
+            self.mark:int = mark
+            self.grade:str = self.get_grade(self.mark)
         elif (subject_id) and (mark == None):
-            self.subject_id = subject_id
-            self.mark = self.new_mark()
+            self.subject_id:str = subject_id
+            self.mark:int = self.new_mark()
+            self.grade:str = self.get_grade(self.mark)
         elif (subject_id == None) and (mark):
-            self.subject_id = self.new_id(Subject.instances)
-            self.mark = mark
+            self.subject_id:str = self.new_id(Subject.instances)
+            self.mark:int = mark
+            self.grade:str = self.get_grade(self.mark)
         else:
             self.subject_id:str = self.new_id(Subject.instances)
             self.mark:int = self.new_mark()
@@ -45,7 +47,7 @@ class Subject():
         valid_set = list(full_set-invalid_set)
 
         subject_id = random.choice(valid_set)
-        line = str(subject_id).rjust(3, '0')
+        line = str(subject_id).rjust(3, '0')    # Pads the empty space to the left with "0" until width of 3
         return line
     
     @staticmethod
@@ -82,7 +84,7 @@ class Subject():
         if mark >= 75 and mark < 85: 
             return "D"
         if mark >= 85:
-            return "HD"   
+            return "HD"
 
     # This method belongs to the class and can be called without creating a class instance.
     @staticmethod    
