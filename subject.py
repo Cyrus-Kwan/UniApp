@@ -15,6 +15,12 @@ class Subject():
             self.subject_id = subject_id
             self.mark = mark
             self.grade = self.get_grade(self.mark)
+        elif (subject_id) and (mark == None):
+            self.subject_id = subject_id
+            self.mark = self.new_mark()
+        elif (subject_id == None) and (mark):
+            self.subject_id = self.new_id(Subject.instances)
+            self.mark = mark
         else:
             self.subject_id:str = self.new_id(Subject.instances)
             self.mark:int = self.new_mark()
@@ -22,7 +28,7 @@ class Subject():
         Subject.instances.append(self)
 
     @staticmethod
-    def new_id(self, subjects:list[object]) -> str:
+    def new_id(subjects:list[object]) -> str:
         '''
         ID randomly generated 1 <= ID <= 999, unique and formatted as 3-digits width
         IDs less than 3-digits width should be completed with zeroes from the left.
@@ -53,7 +59,7 @@ class Subject():
         #               return mark
         # NOTE: value types can be checked with print(type(value))
         new_mark= random.randint(25,100)
-        return new_mark   
+        return new_mark
 
     @staticmethod    
     def get_grade(mark:int) -> str:    
