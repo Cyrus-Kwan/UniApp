@@ -1,18 +1,24 @@
 import random
+import cli
 
 class Subject():
+    # Stores all instances of Subject class, allows an instance to refrence other instances
+    instances = []
+
     def __init__(self, subject_id=None, mark=None):
         if subject_id and mark:
             self.subject_id = subject_id
             self.mark = mark
+            self.grade = self.get_grade(self.mark)
             #print("No marks or id")
         else:
             self.subject_id = self.new_id()
             self.mark = self.new_mark()
             #print("marks and id", f"{self.mark}", f"{self.subject_id}")
             self.grade = self.get_grade(self.mark)
+        Subject.instances.append(self)
 
-    def new_id(self):
+    def new_id(self, valid_set):
         '''
         ID randomly generated 1 <= ID <= 999, unique and formatted as 3-digits width
         IDs less than 3-digits width should be completed with zeroes from the left.
@@ -24,7 +30,7 @@ class Subject():
         # Example: subject_id = "023"
         #               return subject_id
         # NOTE: value types can be checked with print(type(value))
-        subject_id =random.randint(1,999)
+        subject_id =random.choice(valid_set)
         line = str(subject_id).rjust(3, '0')
         return line
     
@@ -61,13 +67,24 @@ class Subject():
             return "D"
         if mark >= 85:
             return "HD"   
-        
+
+    # This method belongs to the class and can be called without creating a class instance.
+    @staticmethod    
+    def _get_instances():
+        '''
+        This method is only intended to be used so that Subject instances 
+        can reference other Subject instances.
+        '''
+        return Subject.instances
+
 def main():
     # You can test your code here
-    test_subject = Subject()
-    print("Subject ID:", test_subject.subject_id)
-    print("Mark:", test_subject.mark)
-    print("Grade:", test_subject.grade)
+    subject1 = Subject(123, 75)
+    subject2 = Subject(321, 57)
+    print("Subject ID:", subject1.subject_id)
+    print("Mark:", subject1.mark)
+    print("Grade:", subject1.grade)
+    print(Subject._get_instances())
 
 if __name__ == "__main__":
     main()
