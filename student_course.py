@@ -1,6 +1,8 @@
 import random
 import cli
 
+from subject import Subject
+
 class StudentCourse():
     '''
     Logged in students can access this menu to perform the following actions:
@@ -12,48 +14,60 @@ class StudentCourse():
     (x) exit
     '''
 
-    def __init__(self, id, name, email, password, subjects, marks):
-        self.id = id
+    def __init__(self, student_id, name, email, password, subject_str, mark_str):
+        self.student_id = student_id
         self.name = name
         self.email = email
         self.password = password
-        self.subjects = subjects
-        self.marks = marks
+        self.subjects = self._get_subjects(subject_str, mark_str)
+        
+    def _get_subjects(self, subject_str, mark_str):
+        id_arr = subject_str.split()
+        marks = [int(mark) for mark in mark_str.split()]
+        subject_arr = []
+
+        while len(id_arr) != len(marks):
+            if len(id_arr) < len(marks):
+                id_arr.append(Subject.new_id(Subject._get_instances()))
+            elif len(id_arr) > len(marks):
+                marks.append(Subject.new_mark())
+
+        for subject_id, mark in zip(id_arr, marks):
+            subject_arr.append(Subject(subject_id, mark))
+
+        return subject_arr
 
     def change(self):
         '''
         Changes the current student's password.
         '''
-        new_password = input("Type new password:")
-        self.password = new_password
+        pass
 
     def enrol(self):
         '''
         Adds a random subject to your current list of subjects.
         You can have a maximum of up to four subjects.
         '''
-        # subjects variable is stored as a string in the format "<subject 1>-<subject 2>-<subject 3>"
-        # Each subject should be 3 digits long between 1 and 999
-        # A subject should not be duplicated in the student course list
-        subject_arr = self.subjects.split()
-        if len(subject_arr) >= 4:
+        if len(self.subjects) >= 4:
             cli.message("Students are allowed to enrol in 4 subjects only", "red")
         else:
-            new_subject = random.randint(1, 999)
+            new_subject = Subject()
+            self.subjects.append(new_subject)
 
-            while new_subject in subject_arr:
-                new_subject = random.randint(1, 999)
-
-            subject_arr.append(str(new_subject).ljust(3, "0"))
-            self.subjects = " ".join(subject_arr)
-            cli.message(f"Enrolling in Subject-{new_subject}", "yellow")
-            cli.message(f"You are now enrolled in {len(subject_arr)} out of 4 subjects", "yellow")
+            cli.message(f"Enrolling in Subject-{new_subject.subject_id}", "yellow")
+            cli.message(f"You are now enrolled in {len(self.subjects)} out of 4 subjects", "yellow")
 
     def remove(self):
         '''
         Removes the specified subject from the current student's subject list.
         '''
-        pass
+        selection = input("Remove Subject by ID: ")
+        for subject in self.subjects:
+            if selection == subject.subject_id:
+                self.subjects.remove(subject)
+                cli.message(f"Dropping Subject-{subject.subject_id}", "yellow")
+                break
+        
 
     def show(self):
         '''
@@ -62,7 +76,8 @@ class StudentCourse():
         pass
 
 def main():
-    pass
+    test = StudentCourse(1, "test", "email", "123 456", "65 76 85")
+    test.enrol()
 
 if __name__ == "__main__":
     main()
