@@ -1,6 +1,6 @@
 from database import Database
 from student_course import StudentCourse
-from subject import Subject
+
 import cli
 
 class Student():
