@@ -15,15 +15,14 @@ class Subject():
             self.subject_id = subject_id
             self.mark = mark
             self.grade = self.get_grade(self.mark)
-            #print("No marks or id")
         else:
-            self.subject_id = self.new_id(Subject.instances)
-            self.mark = self.new_mark()
-            #print("marks and id", f"{self.mark}", f"{self.subject_id}")
-            self.grade = self.get_grade(self.mark)
+            self.subject_id:str = self.new_id(Subject.instances)
+            self.mark:int = self.new_mark()
+            self.grade:str = self.get_grade(self.mark)
         Subject.instances.append(self)
 
-    def new_id(self, subjects):
+    @staticmethod
+    def new_id(self, subjects:list[object]) -> str:
         '''
         ID randomly generated 1 <= ID <= 999, unique and formatted as 3-digits width
         IDs less than 3-digits width should be completed with zeroes from the left.
@@ -43,7 +42,8 @@ class Subject():
         line = str(subject_id).rjust(3, '0')
         return line
     
-    def new_mark(self):
+    @staticmethod
+    def new_mark() -> int:
         '''
         mark is randomly generated where 25<= mark <= 100
         '''
@@ -54,8 +54,9 @@ class Subject():
         # NOTE: value types can be checked with print(type(value))
         new_mark= random.randint(25,100)
         return new_mark   
-        
-    def get_grade(self, mark):    
+
+    @staticmethod    
+    def get_grade(mark:int) -> str:    
         '''
         grade is determined based on the mark
         '''
@@ -79,7 +80,7 @@ class Subject():
 
     # This method belongs to the class and can be called without creating a class instance.
     @staticmethod    
-    def _get_instances():
+    def _get_instances() -> object:
         '''
         This method is only intended to be used so that Subject instances 
         can reference other Subject instances.
