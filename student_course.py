@@ -12,8 +12,8 @@ class StudentCourse():
     (x) exit
     '''
 
-    def __init__(self, student_id, name, email, password, subjects, marks):
-        self.student_id = student_id
+    def __init__(self, id, name, email, password, subjects, marks):
+        self.id = id
         self.name = name
         self.email = email
         self.password = password
@@ -32,9 +32,6 @@ class StudentCourse():
         Adds a random subject to your current list of subjects.
         You can have a maximum of up to four subjects.
         '''
-        # NOTE: Subjects should be a list of subject classes
-        # REFACTOR:
-
         # subjects variable is stored as a string in the format "<subject 1>-<subject 2>-<subject 3>"
         # Each subject should be 3 digits long between 1 and 999
         # A subject should not be duplicated in the student course list

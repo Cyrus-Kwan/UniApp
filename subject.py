@@ -6,23 +6,19 @@ class Subject():
     instances = []
 
     def __init__(self, subject_id=None, mark=None):
-        Subject.instances.append(self)
-
-        self.subject_id = -1
-        self.mark = -1
-
         if subject_id and mark:
             self.subject_id = subject_id
             self.mark = mark
             self.grade = self.get_grade(self.mark)
             #print("No marks or id")
         else:
-            self.subject_id = self.new_id(Subject.instances)
+            self.subject_id = self.new_id()
             self.mark = self.new_mark()
             #print("marks and id", f"{self.mark}", f"{self.subject_id}")
             self.grade = self.get_grade(self.mark)
+        Subject.instances.append(self)
 
-    def new_id(self, subjects):
+    def new_id(self, valid_set):
         '''
         ID randomly generated 1 <= ID <= 999, unique and formatted as 3-digits width
         IDs less than 3-digits width should be completed with zeroes from the left.
@@ -34,11 +30,7 @@ class Subject():
         # Example: subject_id = "023"
         #               return subject_id
         # NOTE: value types can be checked with print(type(value))
-        invalid_set = {int(subject.subject_id) for subject in subjects}
-        full_set = set(range(1,999))
-        valid_set = list(full_set-invalid_set)
-
-        subject_id = random.choice(valid_set)
+        subject_id =random.choice(valid_set)
         line = str(subject_id).rjust(3, '0')
         return line
     
@@ -87,12 +79,12 @@ class Subject():
 
 def main():
     # You can test your code here
-    subject1 = Subject()
+    subject1 = Subject(123, 75)
     subject2 = Subject(321, 57)
     print("Subject ID:", subject1.subject_id)
     print("Mark:", subject1.mark)
     print("Grade:", subject1.grade)
-    # print(Subject._get_instances())
+    print(Subject._get_instances())
 
 if __name__ == "__main__":
     main()
