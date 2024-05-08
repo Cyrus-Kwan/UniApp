@@ -1,6 +1,7 @@
 from database import Database
 from student_course import StudentCourse
 import cli
+import random
 
 class Student():
     '''
@@ -30,17 +31,20 @@ class Student():
         Should check a database object to see if their given email and password exist in
         the system
         '''
+        # Sub-menu title:
+        cli.message("Student Sign In", "green")
+
         email = input("Email: ")
         password = input("Password: ")
 
         # Line index to reference every other credential in the database object
         idx = None
 
-        if email in self.database.data["email"] and password in self.database.data["password"]:
+        if self._in_data(email, password):
             idx = self.database.data["email"].index(email)
 
             # Instantiate new student course
-            id = self.database.data["id"][idx]
+            student_id = self.database.data["student_id"][idx]
             name = self.database.data["name"][idx]
             email = self.database.data["email"][idx]
             password = self.database.data["password"][idx]
@@ -48,7 +52,7 @@ class Student():
             marks = self.database.data["marks"][idx]
 
             student_session = StudentCourse(
-                id, 
+                student_id, 
                 name, 
                 email, 
                 password, 
@@ -75,6 +79,8 @@ class Student():
         If it doesn't, check if the inputed email and password are valid
         If all input is valid, create a new student with no subjects in the database object
         '''
+        # Sub-menu title
+        cli.message("Student Sign Up", "green")
         pass
 
     def _generate_id(self):
@@ -83,7 +89,15 @@ class Student():
         Create a random 6 digit ID that is NOT already listed in the existing IDs
         IDs that are less than 6 digits should be padded with 0's from the left
         '''
-        pass
+        id_arr = {int(id) for id in self.database.data["student_id"]}
+        id_range = set(range(1,999999))
+        valid_range = id_range-id_arr
+        new_id = random.choice(valid_range)
+        
+        return str(new_id).ljust(6, "0")
+
+    def _in_data(self, email, password):
+        return email in self.database.data["email"] and password in self.database.data["password"]
 
 def main():
     DATAFILE = "student.data"
