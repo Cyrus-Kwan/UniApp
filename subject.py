@@ -26,7 +26,7 @@ class Subject():
         # NOTE: value types can be checked with print(type(value))
         subject_id =random.randint(1,999)
         line = str(subject_id).rjust(3, '0')
-        return subject_id
+        return line
     
     def new_mark(self):
         '''
