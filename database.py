@@ -104,7 +104,7 @@ class Database():
         '''
         for key in self.data:
             if type(line_index) == int:
-                self.data[key] = self.data[key][line_index:] + self.data[key][:line_index]
+                self.data[key] = self.data[key][:line_index] + self.data[key][line_index+1:]
             else:
                 self.data[key] = []
 
