@@ -59,7 +59,7 @@ def menu(class_obj, title=None):
     Calls a function based on the user's selection from available methods in the class object
     '''
     func = {}
-    keys = getKeys(class_obj)
+    keys = get_keys(class_obj)
     defaults = {exit_menu:"x", help:"h"}
 
     # Populates func map with class methods
@@ -95,7 +95,7 @@ def menu(class_obj, title=None):
     return exit_menu(class_obj)
     
 
-def getKeys(class_obj):
+def get_keys(class_obj):
     '''
     Maps method names from a given class object to unique characters
     '''
