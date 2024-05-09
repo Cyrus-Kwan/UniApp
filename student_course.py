@@ -92,19 +92,23 @@ class StudentCourse():
         '''
         Prints the student's currently enrolled subjects to the terminal.
         '''
-        # Have a look above in __init__(), notice that self.subjects is a list of Subjects
-        # Each Subject will have the instance variables: subject_id, mark, and grade.
-        # You will need to use these variables for the following task
-        # Reference: https://docs.python.org/3/tutorial/classes.html#class-and-instance-variables
+        def show(self):
+    '''
+    Prints the student's currently enrolled subjects to the terminal.
+    '''
+    # Loop through each Subject in self.subjects
+    for subject in self.subjects:
+        # Extract subject_id, mark, and grade from the Subject object
+        subject_id = subject.subject_id
+        mark = subject.mark
+        grade = subject.grade
 
-        # For each Subject in self.subjects, print the subject_id, mark, and grade in the following format
-        # [ Subject::<subject_id> -- mark = <mark> -- grade = <grade>]
-        # Reference: https://docs.python.org/3/tutorial/controlflow.html#for-statements
-        # Reference: https://docs.python.org/3/tutorial/inputoutput.html#fancier-output-formatting
-        # NOTE: In this output <grade> should be padded with spaces " " so that the width of each
-        #       grade is equal to 3 see Charlie's example of new_id() in subject.py
-        # Reference: https://docs.python.org/3/library/stdtypes.html#str.rjust
-        pass
+        # Format the output string with subject_id, mark, and grade
+        output_line= f"[ Subject::{subject_id} -- Mark = {mark} -- Grade = {grade.rjust(3)}]"
+
+        # Print the formatted string
+        print(output_line)
+
 
 def main():
     test = StudentCourse("0001", "test", "email", "123","123 456", "65 76 85")
