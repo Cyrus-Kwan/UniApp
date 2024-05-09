@@ -92,10 +92,6 @@ class StudentCourse():
         '''
         Prints the student's currently enrolled subjects to the terminal.
         '''
-        def show(self):
-    '''
-    Prints the student's currently enrolled subjects to the terminal.
-    '''
     # Loop through each Subject in self.subjects
     for subject in self.subjects:
         # Extract subject_id, mark, and grade from the Subject object
