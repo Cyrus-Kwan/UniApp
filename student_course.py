@@ -92,18 +92,18 @@ class StudentCourse():
         '''
         Prints the student's currently enrolled subjects to the terminal.
         '''
-    # Loop through each Subject in self.subjects
-    for subject in self.subjects:
-        # Extract subject_id, mark, and grade from the Subject object
-        subject_id = subject.subject_id
-        mark = subject.mark
-        grade = subject.grade
+        # Loop through each Subject in self.subjects
+        for subject in self.subjects:
+            # Extract subject_id, mark, and grade from the Subject object
+            subject_id = subject.subject_id
+            mark = subject.mark
+            grade = subject.grade
 
-        # Format the output string with subject_id, mark, and grade
-        output_line= f"[ Subject::{subject_id} -- Mark = {mark} -- Grade = {grade.rjust(3)}]"
+            # Format the output string with subject_id, mark, and grade
+            output_line= f"[ Subject::{subject_id} -- Mark = {mark} -- Grade = {grade.rjust(3)}]"
 
-        # Print the formatted string
-        print(output_line)
+            # Print the formatted string
+            print(output_line)
 
 
 def main():
