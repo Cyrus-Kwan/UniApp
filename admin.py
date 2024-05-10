@@ -96,11 +96,12 @@ class Admin():
         self.students is then reinstantiated to match database.data
         '''
         student_id:str = input("Removing by ID: ")
-        matches:filter = filter(lambda student: student["student_id"] == student_id, self.students)
-        
-        if matches:
+        match_id = lambda student: student["student_id"] == student_id
+        matches:list = list(filter(match_id, self.students))
+
+        if len(matches)>0:
             for match in matches:
-                del self.students[self.students.index(match)]
+                del self.database.data[self.students.index(match)]
                 cli.message(f"Removing Student {match["student_id"]} Account", "yellow")
         else:
             cli.message(f"Student {student_id} does not exist", "red")
