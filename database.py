@@ -3,6 +3,8 @@ import regex as re
 import cli
 
 class Database():
+    student_columns = ["id", "name", "email", "password", "subjects", "marks"]
+    
     def __init__(self, filepath="student.data"):
         # Default directory and file name
         self.default_name = "student.data"
@@ -30,7 +32,8 @@ class Database():
             cli.error("File does not exist!")
             file_handle = self.create_file()
 
-        file_handle.close()
+        if type(file_handle) == '_io.TextIOWrapper':
+            file_handle.close()
 
     def file_in_dir(self):
         '''
@@ -44,10 +47,11 @@ class Database():
         if not self.path:
             cli.error(f"'{self.path}' is an invalid path, default 'student.data' was created instead.")
             self.path = "\\".join((self.current_dir, self.default_name))
-        
-        # 'w' creates a new file for writing
-        return open(self.path, mode="w")
 
+        # 'w' creates a new file for writing
+        headers = ",".join(self.student_columns)
+        return open(self.path, mode="w").write(headers)
+        
     def write_data(self, line, line_index=None):
         '''
         Modifies the values in the self.data field
