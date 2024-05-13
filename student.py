@@ -92,7 +92,7 @@ class Student():
         matches = list(filter(exists, students))
         
         if len(matches)>0:
-            cli.message(f"Student {matches[0]["name"]} already exists", "red")
+            cli.message(f"Student {matches[0]['name']} already exists", "red")
         else:
             if valid.email(email) and valid.password(password):
                 new_student = StudentCourse(
