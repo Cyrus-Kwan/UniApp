@@ -1,6 +1,6 @@
 import cli
 
-from utils import Utils
+from utils import valid
 from subject import Subject
 
 class StudentCourse():
@@ -49,9 +49,9 @@ class StudentCourse():
         new_password = ""
         confirm_password = ""
 
-        while Utils.password(new_password) == False:
+        while valid.password(new_password) == False:
             new_password = input("New Password: ")
-            if Utils.password(new_password) == False:
+            if valid.password(new_password) == False:
                 cli.message("Incorrect password format", "red")
 
         while new_password != confirm_password:
@@ -108,7 +108,7 @@ class StudentCourse():
 
 def main():
     test = StudentCourse("0001", "test", "email", "123","123 456", "65 76 85")
-    print(Utils.password("123"))
+    print(valid.password("123"))
     cli.menu(test)
     print(test.password)
 
