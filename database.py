@@ -1,5 +1,5 @@
 import os
-import regex as re
+import re
 import cli
 
 class Database():
@@ -125,7 +125,6 @@ class Database():
 def main():
     DATAFILE = "student.data"
     new_db = Database(DATAFILE)
-    print(new_db.read_data())
     # new_db.write_data(f"")
     #new_db.update_file()
 
