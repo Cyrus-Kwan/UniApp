@@ -85,8 +85,8 @@ class Admin():
             else:
                 pass_arr.append(pattern)
         
-        fail_pattern:str = f"FAIL :: {", ".join(fail_arr)}"
-        pass_pattern:str = f"PASS :: {", ".join(pass_arr)}"
+        fail_pattern:str = f"FAIL :: {', '.join(fail_arr)}"
+        pass_pattern:str = f"PASS :: {', '.join(pass_arr)}"
         cli.message(fail_pattern, "white")
         cli.message(pass_pattern, "white")
 
@@ -102,7 +102,7 @@ class Admin():
         if len(matches)>0:
             for match in matches:
                 del self.database.data[self.students.index(match)]
-                cli.message(f"Removing Student {match["student_id"]} Account", "yellow")
+                cli.message(f"Removing Student {match['student_id']} Account", "yellow")
         else:
             cli.message(f"Student {student_id} does not exist", "red")
 
