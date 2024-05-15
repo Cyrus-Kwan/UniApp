@@ -88,7 +88,7 @@ class Student():
         students = self.database.data
         email = input("Email: ")
         password = input("Password: ")
-        exists = lambda student:(email == student["email"]) and (password == student["password"])
+        exists = lambda student:email == student["email"]
         matches = list(filter(exists, students))
         
         if len(matches)>0:
