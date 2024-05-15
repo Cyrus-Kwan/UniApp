@@ -3,12 +3,11 @@ import re
 import cli
 
 class Database():
-    student_columns = ["id", "name", "email", "password", "subjects", "marks"]
-    
-    def __init__(self, filepath="student.data"):
+    def __init__(self, filepath="student.data", headers):
         # Default directory and file name
         self.default_name:str = "student.data"
         self.current_dir:str = os.path.dirname(__file__)
+        self.headers = headers
 
         # Database path, this will be used to create a Database object to perform CRUD operations on
         self.path:str = self.get_path(filepath)
@@ -48,7 +47,7 @@ class Database():
             self.path = "\\".join((self.current_dir, self.default_name))
 
         # 'w' creates a new file for writing
-        headers = ",".join(self.student_columns)
+        headers = ",".join(self.headers)
         return open(self.path, mode="w").write(headers)
         
     def write_data(self, line, line_index=None):
