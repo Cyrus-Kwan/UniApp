@@ -24,7 +24,7 @@ class University():
 
 def main():
     DATAFILE = "student.data"
-    database = Database(filepath=DATAFILE)
+    database = Database(filepath=DATAFILE, headers = Student.properties)
     University(database=database)
 
 if __name__ == "__main__":
