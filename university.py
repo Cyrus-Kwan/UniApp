@@ -17,10 +17,10 @@ class University():
         cli.menu(self)
 
     def admin(self):
-        return Admin()
+        return Admin(self.database)
 
     def student(self):
-        return Student()
+        return Student(self.database)
 
 def main():
     DATAFILE = "student.data"
