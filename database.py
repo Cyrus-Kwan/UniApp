@@ -3,6 +3,8 @@ import re
 import cli
 
 class Database():
+    separator = os.path.sep
+    
     def __init__(self, filepath="student.data", headers):
         # Default directory and file name
         self.default_name:str = "student.data"
@@ -11,6 +13,7 @@ class Database():
 
         # Database path, this will be used to create a Database object to perform CRUD operations on
         self.path:str = self.get_path(filepath)
+        os.makedirs(os.path.dirname(self.path) + Database.separator, exist_ok=True)
 
         # Reads the filepath into a data field and then closes the file
         # if the filepath does not exist, then it is first created and that is read into data
@@ -48,7 +51,7 @@ class Database():
         # Guard clause for None paths
         if not self.path:
             cli.error(f"'{self.path}' is an invalid path, default 'student.data' was created instead.")
-            self.path = "\\".join((self.current_dir, self.default_name))
+            self.path = Database.separator.join((self.current_dir, self.default_name))
 
         # 'w' creates a new file for writing
         headers = ",".join(self.headers)
@@ -125,8 +128,8 @@ class Database():
         re_file, = re.findall(r"^[^/\\]+$", filepath) or [None]
         re_path, = re.findall(r"^.*$", filepath) or [None]
 
-        if re_dir: return "\\".join((re_dir, self.default_name))
-        elif re_file: return "\\".join((self.current_dir, re_file))
+        if re_dir: return Database.separator.join((re_dir, self.default_name))
+        elif re_file: return Database.separator.join((self.current_dir, re_file))
         else: return re_path
 
 def main():
