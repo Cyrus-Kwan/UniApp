@@ -3,11 +3,11 @@ import regex as re
 import cli
 
 class Database():
-    student_columns = ["id", "name", "email", "password", "subjects", "marks"]
     separator = os.path.sep
     
-    def __init__(self, filepath="student.data"):
+    def __init__(self, filepath="student.data", headers):
         # Default directory and file name
+        self.headers = headers
         self.default_name:str = "student.data"
         self.current_dir:str = os.path.dirname(__file__)
 
@@ -49,7 +49,8 @@ class Database():
             self.path = Database.separator.join((self.current_dir, self.default_name))
         
         # 'w' creates a new file for writing
-        return open(self.path, mode="w")
+        headers = ",".join(self.headers)
+        return open(self.path, mode="w").write(headers)
 
     def write_data(self, data_map, line_index=None):
         '''
