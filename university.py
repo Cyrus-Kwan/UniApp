@@ -1,3 +1,9 @@
+import cli
+
+from database import Database
+from admin import Admin
+from student import Student
+
 class University():
     '''
     The university menu system should enable users to choose to go the Admin menu or Student Menu
@@ -6,18 +12,19 @@ class University():
     (S) Student
     (X) Exit
     '''
-
     def __init__(self):
-        pass
+        cli.menu(self)
 
     def admin(self):
-        pass
+        return Admin()
 
     def student(self):
-        pass
+        return Student()
 
 def main():
-    pass
+    DATAFILE = "student.data"
+    database = Database(filepath=DATAFILE)
+    University()
 
 if __name__ == "__main__":
     main()
