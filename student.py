@@ -24,6 +24,8 @@ class Student():
         “students.data”. After login, a student goes to Student Course Menu that offers the choices:
     '''
 
+    properties = ["id", "name", "email", "password", "subjects", "marks"]
+    
     def __init__(self, database:Database):
         self.database = database
         cli.menu(self)
