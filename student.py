@@ -145,7 +145,7 @@ class Student():
 
 def main():
     DATAFILE = "student.data"
-    database = Database(filepath=DATAFILE)
+    database = Database(filepath=DATAFILE, headers = properties)
 
     Student(database)
 
