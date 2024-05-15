@@ -12,7 +12,8 @@ class University():
     (S) Student
     (X) Exit
     '''
-    def __init__(self):
+    def __init__(self, database:Database):
+        self.database:Database = database
         cli.menu(self)
 
     def admin(self):
@@ -24,7 +25,7 @@ class University():
 def main():
     DATAFILE = "student.data"
     database = Database(filepath=DATAFILE)
-    University()
+    University(database=database)
 
 if __name__ == "__main__":
     main()
