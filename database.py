@@ -25,7 +25,11 @@ class Database():
         file_handle = None
         # 'r' opens the existing file handle for reading
         if self.file_in_dir():
-            file_handle = open(self.path, mode="r")
+            file_handle = open(self.path, mode="w")
+            content = file_handle.read()
+            if len(content) == 0:
+                headers = ",".join(self.headers)
+                file_handle.write(headers)
         else:
             cli.message("File does not exist!", "red")
             file_handle = self.create_file()
