@@ -3,13 +3,17 @@ import re
 import cli
 
 class Database():
-    def __init__(self, filepath="student.data"):
+    separator = os.path.sep
+    
+    def __init__(self, filepath="student.data", headers):
         # Default directory and file name
         self.default_name:str = "student.data"
         self.current_dir:str = os.path.dirname(__file__)
+        self.headers = headers
 
         # Database path, this will be used to create a Database object to perform CRUD operations on
         self.path:str = self.get_path(filepath)
+        os.makedirs(os.path.dirname(self.path) + Database.separator, exist_ok=True)
 
         # Reads the filepath into a data field and then closes the file
         # if the filepath does not exist, then it is first created and that is read into data
@@ -24,12 +28,17 @@ class Database():
         file_handle = None
         # 'r' opens the existing file handle for reading
         if self.file_in_dir():
-            file_handle = open(self.path, mode="r")
+            file_handle = open(self.path, mode="w")
+            content = file_handle.read()
+            if len(content) == 0:
+                headers = ",".join(self.headers)
+                file_handle.write(headers)
         else:
             cli.message("File does not exist!", "red")
             file_handle = self.create_file()
 
-        file_handle.close()
+        if type(file_handle) == '_io.TextIOWrapper':
+            file_handle.close()
 
     def file_in_dir(self):
         '''
@@ -42,12 +51,13 @@ class Database():
         # Guard clause for None paths
         if not self.path:
             cli.error(f"'{self.path}' is an invalid path, default 'student.data' was created instead.")
-            self.path = "\\".join((self.current_dir, self.default_name))
-        
-        # 'w' creates a new file for writing
-        return open(self.path, mode="w")
+            self.path = Database.separator.join((self.current_dir, self.default_name))
 
-    def write_data(self, data_map, line_index=None):
+        # 'w' creates a new file for writing
+        headers = ",".join(self.headers)
+        return open(self.path, mode="w").write(headers)
+        
+    def write_data(self, line, line_index=None):
         '''
         Modifies the values in the self.data field
         If a line index is given, it will insert the line into the provided index
@@ -118,8 +128,8 @@ class Database():
         re_file, = re.findall(r"^[^/\\]+$", filepath) or [None]
         re_path, = re.findall(r"^.*$", filepath) or [None]
 
-        if re_dir: return "\\".join((re_dir, self.default_name))
-        elif re_file: return "\\".join((self.current_dir, re_file))
+        if re_dir: return Database.separator.join((re_dir, self.default_name))
+        elif re_file: return Database.separator.join((self.current_dir, re_file))
         else: return re_path
 
 def main():
