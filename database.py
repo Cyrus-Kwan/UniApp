@@ -1,5 +1,5 @@
 import os
-import regex as re
+import re
 import cli
 
 class Database():
@@ -7,16 +7,16 @@ class Database():
     
     def __init__(self, filepath="student.data"):
         # Default directory and file name
-        self.default_name = "student.data"
-        self.current_dir = os.path.dirname(__file__)
+        self.default_name:str = "student.data"
+        self.current_dir:str = os.path.dirname(__file__)
 
         # Database path, this will be used to create a Database object to perform CRUD operations on
-        self.path = self.get_path(filepath)
+        self.path:str = self.get_path(filepath)
 
         # Reads the filepath into a data field and then closes the file
         # if the filepath does not exist, then it is first created and that is read into data
         self.make_file()
-        self.data = self.read_data()
+        self.data:list[dict] = self.read_data()
     
     def make_file(self):
         '''
@@ -26,10 +26,9 @@ class Database():
         file_handle = None
         # 'r' opens the existing file handle for reading
         if self.file_in_dir():
-            cli.notify("File exists!")
             file_handle = open(self.path, mode="r")
         else:
-            cli.error("File does not exist!")
+            cli.message("File does not exist!", "red")
             file_handle = self.create_file()
 
         if type(file_handle) == '_io.TextIOWrapper':
@@ -57,11 +56,10 @@ class Database():
         Modifies the values in the self.data field
         If a line index is given, it will insert the line into the provided index
         '''
-        for idx, key in enumerate(self.data):
-            if type(line_index) == int:
-                self.data[key].insert(line_index, line.split(',')[idx])
-            else:
-                self.data[key].append(line.split(',')[idx])
+        if type(line_index) == int:
+            self.data[line_index] = data_map
+        else:
+            self.data.append(data_map)
 
     def update_file(self):
         '''
@@ -74,8 +72,8 @@ class Database():
             file_handle.seek(len(file_handle.readline()))
             file_handle.truncate()
 
-            # Transposes keys into lines
-            lines = [','.join(line) for line in zip(*(self.data[key] for key in self.data))]
+            # Converts values for each dictionary in data to a string representation
+            lines = [",".join(line.values()) for line in self.data]
 
             # Writes the input string to the data file
             save_content = "\n".join(lines)
@@ -85,32 +83,33 @@ class Database():
         '''
         By default, reads all the lines in the file
         '''
-        data = {}
+        data:list[dict] = []
         with open(self.path, mode="r") as file_handle:
             # Splits the data file by new line characters such that they can be indexed
-            lines = file_handle.read().split('\n')
-            
-            # Takes the header line as keys for dictionary
-            for key in lines[0].split(','):
-                data[key] = []
+            lines:list[str] = file_handle.read().split('\n')
 
-            # Populates data keys with values after the header line
-            for idx, key in enumerate(data.keys()):
-                for line in lines[1:]:
-                    data[key].append(line.split(',')[idx])
+            keys:list[str] = lines[0].split(",")
+            entries:tuple[str] = (row.split(",") for row in lines[1:])
 
-            return data
+            for entry in entries:
+                # Validates the length of lines so that that they match the length of keys
+                if len(entry) != len(keys):
+                    pass
+                else:
+                    data_map:dict = dict(zip(keys, entry))
+                    data.append(data_map)
+
+        return data
 
     def clear_data(self, line_index=None):
         '''
         Deletes the contents of the data field
         If an index is provided, only the given index for each key will be removed
         '''
-        for key in self.data:
-            if type(line_index) == int:
-                self.data[key] = self.data[key][:line_index] + self.data[key][line_index+1:]
-            else:
-                self.data[key] = []
+        if type(line_index) == int:
+            del self.data[line_index]
+        else:
+            self.data = []
 
     def get_path(self, filepath):
         '''
@@ -128,7 +127,7 @@ class Database():
         else: return re_path
 
 def main():
-    DATAFILE = "students.data"
+    DATAFILE = "student.data"
     new_db = Database(DATAFILE)
     # new_db.write_data(f"")
     #new_db.update_file()

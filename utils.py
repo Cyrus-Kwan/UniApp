@@ -1,6 +1,6 @@
-import regex as re
+import re
 
-class Utils():
+class valid():
     @staticmethod
     def password(password:str) -> bool:
         '''

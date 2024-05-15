@@ -1,4 +1,4 @@
-import regex as re
+import re
 
 colour = {
     "black":"\033[0;30m",
@@ -156,6 +156,7 @@ class SomeElaborateClass(object):
     '''
     Sample docstring
     '''
+    class_var = 5
     def __init__(self):
         self.var = 0
         self.val = "hello"

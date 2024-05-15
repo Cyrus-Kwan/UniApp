@@ -66,24 +66,27 @@ class Admin():
                 pattern:str = f"{pad_grade} --> [{name} :: {student_id} --> GRADE: {pad_grade} - MARK: {pad_mark}]"
                 cli.message(pattern, "white")
 
-    def partition_students(self):
+    def partition_students(self) -> None:
+        '''
+        Separates students by average pass and fail grade
+        '''
         cli.message("PASS/FAIL Partition", "yellow")
-        pass_arr = []
-        fail_arr = []
+        pass_arr:list[str] = []
+        fail_arr:list[str] = []
 
         for student in self.students:
-            name = student["name"]
-            student_id = student["student_id"]
-            grade = Admin._average_grade(student).rjust(2, " ")
-            mark = str(Admin._average_mark(student["marks"])).rjust(5, " ")
-            pattern = f"\n{' '*8}"+f"{name} :: {student_id} --> GRADE: {grade} - MARK: {mark}"
+            name:str = student["name"]
+            student_id:str = student["student_id"]
+            grade:str = Admin._average_grade(student).rjust(2, " ")
+            mark:str = str(Admin._average_mark(student["marks"])).rjust(5, " ")
+            pattern:str = f"\n{' '*8}"+f"{name} :: {student_id} --> GRADE: {grade} - MARK: {mark}"
             if Admin._average_grade(student) == "F":
                 fail_arr.append(pattern)
             else:
                 pass_arr.append(pattern)
         
-        fail_pattern = f"FAIL :: {", ".join(fail_arr)}"
-        pass_pattern = f"PASS :: {", ".join(pass_arr)}"
+        fail_pattern:str = f"FAIL :: {", ".join(fail_arr)}"
+        pass_pattern:str = f"PASS :: {", ".join(pass_arr)}"
         cli.message(fail_pattern, "white")
         cli.message(pass_pattern, "white")
 
@@ -92,13 +95,14 @@ class Admin():
         Removes the first instance of user selected student by ID in database data.
         self.students is then reinstantiated to match database.data
         '''
-        data:dict = self.database.data
         student_id:str = input("Removing by ID: ")
-        if student_id in data["student_id"]:
-            idx:int = data["student_id"].index(student_id)
-            self.database.clear_data(idx)
-            self.students = self._get_students(self.exclude, self.split)
-            cli.message(f"Removing Student {student_id} Account", "yellow")
+        match_id = lambda student: student["student_id"] == student_id
+        matches:list = list(filter(match_id, self.students))
+
+        if len(matches)>0:
+            for match in matches:
+                del self.database.data[self.students.index(match)]
+                cli.message(f"Removing Student {match["student_id"]} Account", "yellow")
         else:
             cli.message(f"Student {student_id} does not exist", "red")
 
@@ -111,35 +115,32 @@ class Admin():
             name:str = student["name"]
             student_id:str = student["student_id"]
             email:str = student["email"]
-            pattern = f"{name} :: {student_id} --> Email: {email}"
+            pattern:str = f"{name} :: {student_id} --> Email: {email}"
             cli.message(pattern, "white")
 
     def _get_students(self, private:tuple[str], splits:tuple[str]) -> list[dict]:
         '''
-        Transposes database data for easier manipulation.
+        Returns a deep copy of database data with private keys excluded
         '''
-        transposed:list[dict] = []
-        data:dict = {}
+        students:list[dict] = []
+        for entry in self.database.data:
+            # Deep copy of database.data
+            copy:dict = {}
+            for key, value in entry.items():
+                if key in private:
+                    pass
+                else:
+                    copy[key] = value
+            students.append(self._split_keys(copy, splits))
+        
+        return students
 
-        # Creates a deep copy of database data but removes the specified private key
-        for key in self.database.data.keys():
-            if key in private:
-                pass
-            else:
-                data[key] = self.database.data[key]
-
-        student_list:zip = zip(*data.values())
-        for value in student_list:
-            student:dict = dict(zip(data.keys(), value))
-            transposed.append(self._split_keys(student, splits))
-
-        return transposed
     
     def _split_keys(self, map:dict, keys:tuple[str]) -> dict:
         '''
         Splits the specified keys in a dictionary by string whitespace.
         '''
-        new_map = {}
+        new_map:dict = {}
         for key in map.keys():
             if key in keys:
                 new_map[key] = map[key].split()
